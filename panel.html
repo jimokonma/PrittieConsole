@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Console Watcher Pro</title>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1 class="title">Console Watcher Pro</h1>
+        <div class="status-indicator" id="statusIndicator">
+          <span class="status-dot"></span>
+          <span class="status-text">Connected</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-secondary" id="settingsBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98c0 .33.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65z"/>
+          </svg>
+        </button>
+        <button class="btn btn-primary" id="clearBtn">Clear All</button>
+      </div>
+    </header>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">
+        All <span class="count" id="countAll">0</span>
+      </button>
+      <button class="filter-tab" data-filter="error">
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        Errors <span class="count" id="countError">0</span>
+      </button>
+      <button class="filter-tab" data-filter="warn">
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+        </svg>
+        Warnings <span class="count" id="countWarn">0</span>
+      </button>
+      <button class="filter-tab" data-filter="log">
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+        Success <span class="count" id="countLog">0</span>
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search logs, files, or URLs..." class="search-input">
+        <button class="clear-search" id="clearSearch" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Log Table -->
+      <div class="log-table-container">
+        <table class="log-table" id="logTable">
+          <thead>
+            <tr>
+              <th class="col-timestamp">Timestamp</th>
+              <th class="col-type">Type</th>
+              <th class="col-message">Message</th>
+              <th class="col-source">Source</th>
+            </tr>
+          </thead>
+          <tbody id="logTableBody">
+            <!-- Log rows will be inserted here -->
+          </tbody>
+        </table>
+        <div id="emptyState" class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <h3>No logs captured yet</h3>
+          <p>Try running some console commands to see them here</p>
+        </div>
+      </div>
+
+      <!-- Details Pane -->
+      <div class="details-pane" id="detailsPane" style="display: none;">
+        <div class="details-header">
+          <h3>Log Details</h3>
+          <button class="close-details" id="closeDetails">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="details-content" id="detailsContent">
+          <!-- Details content will be inserted here -->
+        </div>
+        <div class="details-actions">
+          <button class="btn btn-secondary" id="copyDetails">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+            </svg>
+            Copy Details
+          </button>
+          <button class="btn btn-secondary" id="openInSources">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+            </svg>
+            Open in Sources
+          </button>
+          <button class="btn btn-secondary" id="reportFeedback">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+            Report
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" style="display: none;">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Settings</h3>
+          <button class="close-modal" id="closeSettings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-content">
+          <div class="setting-group">
+            <label for="maxLogs">Maximum Log Entries</label>
+            <input type="number" id="maxLogs" min="100" max="10000" value="1000">
+          </div>
+          <div class="setting-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="autoScroll" checked>
+              <span class="checkmark"></span>
+              Auto-scroll to new logs
+            </label>
+          </div>
+          <div class="setting-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="captureThirdParty" checked>
+              <span class="checkmark"></span>
+              Capture third-party script logs
+            </label>
+          </div>
+          <div class="setting-group">
+            <label for="theme">Theme</label>
+            <select id="theme">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" id="resetSettings">Reset to Defaults</button>
+          <button class="btn btn-primary" id="saveSettings">Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="panel.js"></script>
+</body>
+</html> 

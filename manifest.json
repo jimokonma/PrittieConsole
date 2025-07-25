@@ -1,0 +1,19 @@
+{
+  "name": "Console Watcher Pro",
+  "description": "Advanced console log capture with filtering, search, and detailed stack traces",
+  "version": "2.0.0",
+  "manifest_version": 3,
+  "devtools_page": "devtools.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+} 

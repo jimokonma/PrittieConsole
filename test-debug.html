@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Console Watcher Pro - Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        .error { color: #d73a49; }
+        .warn { color: #f6a434; }
+        .success { color: #28a745; }
+    </style>
+</head>
+<body>
+    <h1>Console Watcher Pro - Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test Console Methods</h2>
+        <p>Click these buttons to test different console methods:</p>
+        
+        <button onclick="testLog()">Test console.log()</button>
+        <button onclick="testWarn()">Test console.warn()</button>
+        <button onclick="testError()">Test console.error()</button>
+        <button onclick="testInfo()">Test console.info()</button>
+        <button onclick="testDebug()">Test console.debug()</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Errors</h2>
+        <p>Click these buttons to test error scenarios:</p>
+        
+        <button onclick="testUncaughtError()">Test Uncaught Error</button>
+        <button onclick="testPromiseRejection()">Test Promise Rejection</button>
+        <button onclick="testReferenceError()">Test Reference Error</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Objects</h2>
+        <p>Test logging complex objects:</p>
+        
+        <button onclick="testObject()">Test Object Logging</button>
+        <button onclick="testArray()">Test Array Logging</button>
+        <button onclick="testFunction()">Test Function Logging</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Debug Information</h2>
+        <p>Check if the extension is working:</p>
+        <button onclick="checkExtension()">Check Extension Status</button>
+        <div id="debug-info"></div>
+    </div>
+
+    <script>
+        function testLog() {
+            console.log('This is a test log message');
+        }
+
+        function testWarn() {
+            console.warn('This is a test warning message');
+        }
+
+        function testError() {
+            console.error('This is a test error message');
+        }
+
+        function testInfo() {
+            console.info('This is a test info message');
+        }
+
+        function testDebug() {
+            console.debug('This is a test debug message');
+        }
+
+        function testUncaughtError() {
+            throw new Error('This is a test uncaught error');
+        }
+
+        function testPromiseRejection() {
+            Promise.reject(new Error('This is a test promise rejection'));
+        }
+
+        function testReferenceError() {
+            console.log(undefinedVariable);
+        }
+
+        function testObject() {
+            const testObj = {
+                name: 'Test Object',
+                value: 42,
+                nested: {
+                    prop: 'nested value'
+                }
+            };
+            console.log('Test object:', testObj);
+        }
+
+        function testArray() {
+            const testArray = [1, 2, 3, 'test', { prop: 'value' }];
+            console.log('Test array:', testArray);
+        }
+
+        function testFunction() {
+            function testFunction() {
+                return 'test function result';
+            }
+            console.log('Test function:', testFunction);
+        }
+
+        function checkExtension() {
+            const debugInfo = document.getElementById('debug-info');
+            
+            // Check if content script is loaded
+            if (window.consoleWatcher) {
+                debugInfo.innerHTML = '<p class="success">✅ Content script is loaded</p>';
+            } else {
+                debugInfo.innerHTML = '<p class="error">❌ Content script is NOT loaded</p>';
+            }
+
+            // Check if console methods are overridden
+            const originalMethods = ['log', 'warn', 'error', 'info', 'debug'];
+            let overriddenCount = 0;
+            
+            originalMethods.forEach(method => {
+                if (console[method].toString().includes('captureLog')) {
+                    overriddenCount++;
+                }
+            });
+
+            if (overriddenCount === originalMethods.length) {
+                debugInfo.innerHTML += '<p class="success">✅ All console methods are overridden</p>';
+            } else {
+                debugInfo.innerHTML += `<p class="error">❌ Only ${overriddenCount}/${originalMethods.length} console methods are overridden</p>`;
+            }
+
+            // Check if we can access chrome.runtime
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                debugInfo.innerHTML += '<p class="success">✅ Chrome runtime is available</p>';
+            } else {
+                debugInfo.innerHTML += '<p class="error">❌ Chrome runtime is NOT available</p>';
+            }
+        }
+
+        // Auto-check extension status when page loads
+        window.addEventListener('load', () => {
+            setTimeout(checkExtension, 1000);
+        });
+    </script>
+</body>
+</html> 
