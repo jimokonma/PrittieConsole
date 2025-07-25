@@ -243,5 +243,4 @@ For issues, feature requests, or questions:
 
 ---
 
-**Console Watcher Pro** - Professional console log monitoring for developers. #   P r i t t i e C o n s o l e  
- 
+**Console Watcher Pro** - Professional console log monitoring for developers.
